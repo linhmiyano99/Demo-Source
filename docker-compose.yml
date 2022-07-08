@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  rabbitmq:
+    build: ./rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  emit:
+    build: ./src/emit
+    ports:
+      - 5002:5002
+    depends_on:
+      - rabbitmq
+  receiver:
+    build: ./src/receiver
+    ports:
+      - 5001:5001
+    depends_on:
+      - rabbitmq
