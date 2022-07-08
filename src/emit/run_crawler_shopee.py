@@ -1,4 +1,4 @@
-from src.emit.crawler_shopee import CrawlerShopee
+from crawler_shopee import CrawlerShopee
 import configparser
 
 config = configparser.ConfigParser()

@@ -1,6 +1,6 @@
 import configparser
 
-from src.emit.crawler_lazada import CrawlerLazada
+from crawler_lazada import CrawlerLazada
 
 config = configparser.ConfigParser()
 config.read('config.ini')

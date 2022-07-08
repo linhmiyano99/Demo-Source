@@ -1,6 +1,6 @@
 import configparser
 
-from crawler_lazada import CrawlerLazada
+from lazada import CrawlerLazada
 
 from flask import Flask, jsonify
 from flask_restful import Api, Resource
@@ -11,7 +11,8 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 app = Flask(__name__)
 api = Api(app)
-crawler = CrawlerLazada()
+lazada = CrawlerLazada()
+shopee = CrawlerShopee()
 
 
 class EmitLazada(Resource):
@@ -21,7 +22,7 @@ class EmitLazada(Resource):
         #
         # url = postedData["url"]
 
-        crawler.crawl_by_url(
+        lazada.crawl_by_url(
             url=config['CRAWLER_PATH']['URL_LAZADA'],
             queue=config['DEFAULT_QUEUE']['QUEUE_LAZADA'],
             durable=True
@@ -40,8 +41,7 @@ class EmitShopee(Resource):
         #
         # url = postedData["url"]
 
-        crawler = CrawlerShopee()
-        crawler.crawl_by_url(
+        shopee.crawl_by_url(
             url=config['CRAWLER_PATH']['URL_SHOPEE'],
             queue=config['DEFAULT_QUEUE']['QUEUE_SHOPEE'],
             durable=True
