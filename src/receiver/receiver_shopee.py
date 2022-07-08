@@ -29,8 +29,8 @@ class ReceiverShopee(Receiver):
             raw_data = json.loads(urlopen(req).read().decode('utf-8'))['data']
             title = raw_data['name']
             brand_name = raw_data['brand']
-            selling_price = raw_data['price_max']
-            recommend_price = raw_data['price_max_before_discount']
+            selling_price = int(raw_data['price_max'] / 100000)
+            recommend_price = int(raw_data['price_max_before_discount'] / 100000)
             sold = raw_data['sold']
             list_item.append([title, brand_name, selling_price, recommend_price, sold])
 
