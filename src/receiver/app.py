@@ -11,7 +11,8 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 app = Flask(__name__)
 api = Api(app)
-receiver = ReceiverLazada()
+lazada = ReceiverLazada()
+shopee = ReceiverShopee()
 
 
 class EmitLazada(Resource):
@@ -21,7 +22,7 @@ class EmitLazada(Resource):
         #
         # url = postedData["url"]
 
-        receiver.start_receiver(queue=config['DEFAULT_QUEUE']['QUEUE_LAZADA'], prefetch_count=100, durable=True)
+        lazada.start_receiver(queue=config['DEFAULT_QUEUE']['QUEUE_LAZADA'], prefetch_count=100, durable=True)
 
         retJson = {
             "status": 200,
@@ -37,8 +38,7 @@ class EmitShopee(Resource):
         #
         # url = postedData["url"]
 
-        receiver = ReceiverShopee()
-        receiver.start_receiver(queue=config['DEFAULT_QUEUE']['QUEUE_SHOPEE'], prefetch_count=100, durable=True)
+        shopee.start_receiver(queue=config['DEFAULT_QUEUE']['QUEUE_SHOPEE'], prefetch_count=100, durable=True)
 
         retJson = {
             "status": 200,
