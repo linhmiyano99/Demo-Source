@@ -19,13 +19,12 @@ class CrawlerLazada(Crawler):
         raw_data = json.loads(html)['result']['data']
 
         i = 0
-        channel = self.connection.channel()
-        channel.queue_declare(queue=queue, durable=durable)
+        self.channel.queue_declare(queue=queue, durable=durable)
         list_url = []
         for row in raw_data:
             list_url.append(row['pdpUrl'])
             if i % 20 == 0:
-                channel.basic_publish(
+                self.channel.basic_publish(
                     exchange='',
                     routing_key=queue,
                     body=json.dumps(list_url),

@@ -13,6 +13,7 @@ class Crawler:
                 host=config['HOST']['LOCAL_HOST']
             )
         )
+        self.channel = self.connection.channel()
 
     @abc.abstractmethod
     def crawl_by_url(self, url, queue, durable=True):

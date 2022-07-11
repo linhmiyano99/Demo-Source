@@ -18,15 +18,14 @@ class CrawlerShopee(Crawler):
         html = page.text
         raw_data = json.loads(html)['data']['sections'][0]['data']['item']
         i = 0
-        channel = self.connection.channel()
-        channel.queue_declare(queue=queue, durable=durable)
+        self.channel.queue_declare(queue=queue, durable=durable)
         list_url = []
         for row in raw_data:
             i += 1
             body = {'itemid': row['itemid'], 'shopid': row['shopid']}
             list_url.append(body)
             if i % 20 == 0:
-                channel.basic_publish(
+                self.channel.basic_publish(
                     exchange='',
                     routing_key=queue,
                     body=json.dumps(list_url),
