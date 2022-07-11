@@ -2,7 +2,7 @@ import configparser
 
 from lazada import CrawlerLazada
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_restful import Api, Resource
 
 from crawler_shopee import CrawlerShopee
@@ -18,13 +18,13 @@ shopee = CrawlerShopee()
 class EmitLazada(Resource):
     def post(self):
         # Step 1 get the posted data
-        # postedData = request.get_json()
-        #
-        # url = postedData["url"]
+        postedData = request.get_json()
+        url = config['CRAWLER_PATH']['URL_LAZADA'] if "url" not in postedData else postedData["url"]
+        queue = config['DEFAULT_QUEUE']['QUEUE_LAZADA'] if "queue" not in postedData else postedData["queue"]
 
         lazada.crawl_by_url(
-            url=config['CRAWLER_PATH']['URL_LAZADA'],
-            queue=config['DEFAULT_QUEUE']['QUEUE_LAZADA'],
+            url=url,
+            queue=queue,
             durable=True
         )
         retJson = {
@@ -37,13 +37,13 @@ class EmitLazada(Resource):
 class EmitShopee(Resource):
     def post(self):
         # Step 1 get the posted data
-        # postedData = request.get_json()
-        #
-        # url = postedData["url"]
+        postedData = request.get_json()
+        url = config['CRAWLER_PATH']['URL_SHOPEE'] if "url" not in postedData else postedData["url"]
+        queue = config['DEFAULT_QUEUE']['QUEUE_SHOPEE'] if "queue" not in postedData else postedData["queue"]
 
         shopee.crawl_by_url(
-            url=config['CRAWLER_PATH']['URL_SHOPEE'],
-            queue=config['DEFAULT_QUEUE']['QUEUE_SHOPEE'],
+            url=url,
+            queue=queue,
             durable=True
         )
         retJson = {

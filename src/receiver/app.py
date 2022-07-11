@@ -2,7 +2,7 @@ import configparser
 
 from receiver_lazada import ReceiverLazada
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_restful import Api, Resource
 
 from receiver_shopee import ReceiverShopee
@@ -11,18 +11,18 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 app = Flask(__name__)
 api = Api(app)
-lazada = ReceiverLazada()
-shopee = ReceiverShopee()
 
 
 class EmitLazada(Resource):
+
     def post(self):
         # Step 1 get the posted data
-        # postedData = request.get_json()
-        #
-        # url = postedData["url"]
+        postedData = request.get_json()
+        queue = config['DEFAULT_QUEUE']['QUEUE_LAZADA'] if "queue" not in postedData else postedData["queue"]
 
-        lazada.start_receiver(queue=config['DEFAULT_QUEUE']['QUEUE_LAZADA'], prefetch_count=100, durable=True)
+        lazada = ReceiverLazada()
+
+        lazada.start_receiver(queue=queue, prefetch_count=100, durable=True)
 
         retJson = {
             "status": 200,
@@ -32,13 +32,13 @@ class EmitLazada(Resource):
 
 
 class EmitShopee(Resource):
+
     def post(self):
         # Step 1 get the posted data
-        # postedData = request.get_json()
-        #
-        # url = postedData["url"]
-
-        shopee.start_receiver(queue=config['DEFAULT_QUEUE']['QUEUE_SHOPEE'], prefetch_count=100, durable=True)
+        postedData = request.get_json()
+        queue = config['DEFAULT_QUEUE']['QUEUE_SHOPEE'] if "queue" not in postedData else postedData["queue"]
+        shopee = ReceiverShopee()
+        shopee.start_receiver(queue=queue, prefetch_count=100, durable=True)
 
         retJson = {
             "status": 200,
